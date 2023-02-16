@@ -1,0 +1,84 @@
+---
+title: "Challenge 4"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+execute: 
+  eval: true
+  error: true
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r}
+library(readxl) 
+library(tidyverse)
+library(here)
+library(dplyr)
+#create data set for median housing prices for 2016 - 2018
+housing <- read_xlsx((here("houseprice.xlsx")))
+avo <- read_csv(here("avocado.csv"))
+clean_avo <- avo |>
+  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
+  filter(region %in% c("LosAngeles", 
+                       "SanDiego", 
+                       "Sacramento",
+                       "SanFrancisco") & Year != 2015) |>  
+  group_by(region, Year) |> 
+  select(region, Year, `Total Volume`, AveragePrice) |> 
+  mutate(mean_price = mean(AveragePrice)) |>
+  mutate(mean_volume = mean(`Total Volume`)) |>
+  select(region, Year, mean_price, mean_volume) |>
+  distinct() |>
+  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
+  full_join(housing) |>
+  pivot_longer(mean_price_2016:mean_price_2018, names_to = "price_years", values_to = "price_values") |> 
+    pivot_longer(mean_volume_2016:mean_volume_2018, names_to = "volume_years", values_to = "volume_values") |> 
+    pivot_longer(`2016`:`2018`, names_to = "housing_years", values_to = "housing_values") 
+  
+  
+
+ggplot(clean_avo) + 
+  geom_point(aes(x=price_years, y=price_values), color="tomato")  +
+  facet_wrap(~region) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
+  labs(title="Avg prices of avocados vs Years in each CA city") + 
+  ylab("Avocado Prices in Dollars") +
+  xlab("Years")
+  
+ggplot(clean_avo) +
+  geom_point(aes(x=housing_years, y=housing_values), color = "green") + 
+  facet_grid(~region) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(title="Avg prices of housing vs Years in each CA city") + 
+  ylab("Housing Prices in Dollars") +
+  xlab("Years")
+
+ggplot(clean_avo) +
+  geom_point(aes(x=volume_years, y=volume_values), color = "blue")  + 
+  facet_grid(~region) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(title="Avg volumes of avocados sold vs Years in each CA city") + 
+  ylab("Units of Avocados sold") +
+  xlab("Years")
+  
+  
+
+```
+
+The general trend for prices in avocados has been a negative concave down trend. The general trend for prices in housing has been a positive upward trend. The general trend of volumes of avocados sold has been a positive concave up trend. There is an association between housing prices and avocados sold. But I do not believe that is causation, however. Buying more avocados does not simply raise housing prices
+
+data source:
+
+https://www.propertyshark.com/mason/market-trends/residential/ca/los-angeles/los-angeles
+
+https://www.propertyshark.com/mason/market-trends/residential/ca/sacramento/sacramento
+
+https://sf.curbed.com/2018/4/5/17201888/san-francisco-median-home-house-price-average-2018
+
+https://www.noradarealestate.com/blog/san-diego-real-estate-market/

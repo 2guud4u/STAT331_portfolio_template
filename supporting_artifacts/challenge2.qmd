@@ -1,0 +1,33 @@
+---
+title: "Lab 2"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+    echo: true
+execute: 
+  eval: true
+  error: false
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r, messages = FALSE}
+library(tidyverse)
+library(here)
+library(ggridges)
+surveys <- read_csv(here( "surveys.csv"))
+ggplot(data=surveys, mapping=aes(x = weight, 
+                                  y = species)) +  
+  geom_jitter(color="tomato", 
+              alpha=.5, 
+              width=.5, 
+              height = .5)+
+  suppressMessages(geom_density_ridges()) +
+  xlab("weight of rodent in grams")+ 
+  ylab("species of rodents")
+```

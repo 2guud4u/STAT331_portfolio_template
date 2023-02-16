@@ -1,0 +1,101 @@
+---
+title: "Lab 5"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+execute: 
+  eval: true
+  error: true
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(forcats)
+surveys <- read_csv(here("surveys.csv"))
+```
+
+1.reorder
+
+```{r}
+surveys <- surveys|> 
+  drop_na() |>
+  mutate(species = factor(species), 
+         weight = as.numeric(weight),
+         species=fct_reorder(species, weight, .desc = TRUE))
+  
+```
+
+```{r}
+ggplot(data=surveys, mapping=aes(x = weight, 
+                                  y = species)) + 
+  geom_jitter(color="tomato", alpha=.3) +
+  geom_boxplot(outlier.alpha = 0)+ 
+  labs(y="",x="weight of rodentin grams", title = "Box plot for different species weights of rodents in grams across speices")
+```
+
+```{r}
+ggplot(data = surveys, 
+       mapping = aes(x=year, y=weight, col = genus))+
+  geom_line() +
+  labs(y="", title = "Time plot of mean weight of genuses", col="Rodent Genus")
+```
+
+```{r}
+surveys <- surveys|> 
+  group_by(year)|>
+  mutate(mean_weight = mean(weight)) 
+
+ggplot(surveys) +
+  geom_line(aes(x=year, 
+                y=mean_weight, 
+                col=genus)) +
+  labs(y="", 
+       title = "Time plot of mean weight of genuses", col="Rodent Genus")
+```
+
+```{r}
+surveys <- surveys|> 
+  mutate(species = factor(species), 
+         mean_weight = as.numeric(mean_weight),
+         species=fct_reorder(species, mean_weight, .desc = TRUE))
+ggplot(surveys) +
+  geom_line(aes(x=year,
+                y=mean_weight,
+                col=genus)) +
+  labs(y="", 
+       title = "Time plot of mean weight of genuses", 
+       col="Rodent Genus") 
+   
+```
+
+```{r}
+
+nsurveys <- surveys |>
+  mutate(day_of_week = factor(day_of_week),
+         day_of_week = ordered(day_of_week, 
+                                    c("Mon", "Tue", "Wed", "Thu", 
+"Fri", "Sat", "Sun") )) |>
+  drop_na(day_of_week)
+ggplot(nsurveys, aes(x=day_of_week)) +
+  geom_bar() +
+  labs(y="", title="Count of rodent caught")
+```
+
+```{r}
+surveys <- surveys |> 
+  mutate(new=fct_collapse(day_of_week,
+         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
+         Weekend = c("Sat", "Sun"))) 
+    
+ggplot(surveys, aes(x=new)) +
+  geom_bar() +
+  labs(y="", title="Count of rodents caught",x="Day of week")
+```

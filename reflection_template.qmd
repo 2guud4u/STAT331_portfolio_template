@@ -11,7 +11,7 @@ execute:
   echo: true
 ---
 
-[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_\_.
+[**My Grade:**]{.underline} I believe my grade equivalent to course work evidenced below to be an \_A\_.
 
 [**Learning Objective Evidence:**]{.underline} In the code chunks below, provide code from a Lab or Challenge assignment where you believe you have demonstrated proficiency with the specified learning target. Be sure to specify **where** the code came from (e.g., Lab 4 Question 2).
 
@@ -19,94 +19,131 @@ execute:
 
 **WD-1: I can import data from a *variety* of formats (e.g., csv, xlsx, txt, etc.).**
 
--   `csv`
+-   `csv`Lab 3 Question 1
 
 ```{r wd-1-csv}
-
+surveys <- read_csv(here("hiphop.csv"))
 ```
 
--   `xlsx`
+-   `xlsx`Practice 3 Question 1
 
 ```{r wd-1-xlsx}
-
+colleges <- read_csv("https://www.dropbox.com/s/bt5hvctdevhbq6j/colleges.csv?dl=1")
 ```
 
--   `txt`
+-   `txt`Practice 5.2 Question 1
 
 ```{r wd-1-txt}
-
+message <- read_csv(here::here("data","scrambled_message.txt")
+                      )
 ```
 
 **WD-2: I can select necessary columns from a dataset.**
 
-```{r wd-2}
+-   Lab3 Question 2
 
+```{r wd-2}
+hiphop_new <- hiphop_clean |> select(c(sex, age, ethnic, subj)) |> distinct(subj, .keep_all = TRUE)  
 ```
 
 **WD-3: I can filter rows from a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
 
--   numeric
+-   numeric lab 4 Question 4
 
 ```{r wd-3-numeric}
-
+new_avocado_major |> filter(Year==2017, type== "organic") 
 ```
 
--   character -- specifically a string
+-   character -- specifically a string lab 4 Question 5
 
 ```{r wd-3-string}
-
+avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco")) 
 ```
 
--   factor
+-   factor lab5 question 9
 
 ```{r wd-3-factor}
-
+surveys <- surveys |> 
+  mutate(new=fct_collapse(day_of_week,
+         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
+         Weekend = c("Sat", "Sun"))) 
 ```
 
--   date
+-   date practice 5.1 question 2
 
 ```{r wd-3-date}
-
+suspects <- suspects |>
+  filter(wday(Time.Spotted) != c(2, 4))
 ```
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
 
--   numeric
+-   numeric lab 3 question 12
 
 ```{r wd-4-numeric}
-
+hiphop_clean |> group_by(word) |> filter(ethnic != "white", sex == "Female") |> summarise(avg = mean(familiarity)) |> slice_max(avg)
 ```
 
--   character -- specifically a string
+-   character -- specifically a string practice 5.2 question 1 and 2
 
 ```{r wd-4-string}
+message %>% 
+  mutate(length = str_length(Word)) %>% 
+  summarise(total_length = sum(length))
 
+message <- message |>
+  mutate(Word=str_trunc(Word, width=16))
 ```
 
--   factor
+-   factor lab 5 question 1 and 7
 
 ```{r wd-4-factor}
+surveys <- surveys|> 
+  drop_na() |>
+  mutate(species = factor(species), 
+         weight = as.numeric(weight),
+         species=fct_reorder(species, weight, .desc = TRUE))
 
+nsurveys <- surveys |>
+  mutate(day_of_week = factor(day_of_week),
+         day_of_week = ordered(day_of_week, 
+                                    c("Mon", 
+                                      "Tue", 
+                                      "Wed", 
+                                      "Thu",
+                                      "Fri", 
+                                      "Sat", 
+                                      "Sun") )) |>
+  drop_na(day_of_week)
+
+ggplot(nsurveys, aes(x=day_of_week)) +
+  geom_bar() +
+  labs(y="", title="Count of rodent caught")
 ```
 
--   date
+-   date 5.1 question 2
 
 ```{r wd-4-date}
-
+suspects <- suspects |> 
+  mutate(Time.Spotted = ymd_hms(Time.Spotted),
+         Time.Spotted = force_tz(Time.Spotted, 
+                                 tzone = "America/Los_Angeles")) |>
+  filter(pm(Time.Spotted))
 ```
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
 
--   `left_join()`
+-   `left_join() lab4 question 1`
 
 ```{r wd-5-left}
-
+avocado_major <- left_join(regions_major, avo, by = "region")
 ```
 
--   `right_join()`
+-   `right_join() lab4 question 4`
 
 ```{r wd-5-right}
-
+avocado_metro <- avocado_clean |> 
+  right_join(regions_metro, by="region")
 ```
 
 -   `inner_join()`
@@ -115,10 +152,23 @@ execute:
 
 ```
 
--   `full_join()`
+-   `full_join() challenge 4`
 
 ```{r wd-5-full}
-
+clean_avo <- avo |>
+  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
+  filter(region %in% c("LosAngeles", 
+                       "SanDiego", 
+                       "Sacramento",
+                       "SanFrancisco") & Year != 2015) |>  
+  group_by(region, Year) |> 
+  select(region, Year, `Total Volume`, AveragePrice) |> 
+  mutate(mean_price = mean(AveragePrice)) |>
+  mutate(mean_volume = mean(`Total Volume`)) |>
+  select(region, Year, mean_price, mean_volume) |>
+  distinct() |>
+  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
+  full_join(housing)
 ```
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
@@ -129,24 +179,51 @@ execute:
 
 ```
 
--   `anti_join()`
+-   `anti_join() lab 4 question 1`
 
 ```{r wd-6-anti}
-
+avocado_clean <- anti_join(avo, regions_major, by = "region")
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer()`
+-   `pivot_longer() challenge 4`
 
 ```{r wd-7-long}
-
+clean_avo <- avo |>
+  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
+  filter(region %in% c("LosAngeles", 
+                       "SanDiego", 
+                       "Sacramento",
+                       "SanFrancisco") & Year != 2015) |>  
+  group_by(region, Year) |> 
+  select(region, Year, `Total Volume`, AveragePrice) |> 
+  mutate(mean_price = mean(AveragePrice)) |>
+  mutate(mean_volume = mean(`Total Volume`)) |>
+  select(region, Year, mean_price, mean_volume) |>
+  distinct() |>
+  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
+  full_join(housing) |>
+  pivot_longer(mean_price_2016:mean_price_2018, names_to = "price_years", values_to = "price_values")
 ```
 
--   `pivot_wider()`
+-   `pivot_wider() challenge 4`
 
 ```{r wd-7-wide}
-
+clean_avo <- avo |>
+  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
+  filter(region %in% c("LosAngeles", 
+                       "SanDiego", 
+                       "Sacramento",
+                       "SanFrancisco") & Year != 2015) |>  
+  group_by(region, Year) |> 
+  select(region, Year, `Total Volume`, AveragePrice) |> 
+  mutate(mean_price = mean(AveragePrice)) |>
+  mutate(mean_volume = mean(`Total Volume`)) |>
+  select(region, Year, mean_price, mean_volume) |>
+  distinct() |>
+  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
+  full_join(housing)
 ```
 
 ## Reproducibility
@@ -157,114 +234,227 @@ I've done this in the following provided assignments:
 
 **R-2: I can write well documented and tidy code.**
 
--   Example 1
+-   Example 1 lab 5 question 3 revision
 
 ```{r r-2-1}
-
+#using data of weight and species to make a jitter and boxplot
+ggplot(data=surveys, mapping=aes(x = weight, 
+                                  y = species)) + 
+  geom_jitter(color="tomato", 
+              alpha=.3) +
+  geom_boxplot(outlier.alpha = 0)+ 
+  labs(y="",x="weight of rodentin grams", 
+       title = "Box plot for different species weights of rodents in grams across speices")
 ```
 
--   Example 2
+-   Example 2 lab4 question 4 revision
 
 ```{r r-2-2}
+#Grabbing the top 5 mean volume of avocados sold per metros
+avocado_metro <- avocado_clean |> 
+  right_join(regions_metro, by="region")
 
+avocado_metro_avg <- avocado_metro |> 
+  group_by(region) |> 
+  summarise(avg = mean(`Total Volume`)) |> 
+  select(region, avg) |> 
+  slice_max(n=5, order_by =avg)
 ```
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
 
--   Example 1
+-   Example 1 lab4 question 4 revision
 
 ```{r r-3-1}
+#Grabbing the top 5 mean volume of avocados sold per metros
+avocado_metro <- avocado_clean |> 
+  right_join(regions_metro, by="region")
 
+avocado_metro_avg <- avocado_metro |> 
+  group_by(region) |> 
+  summarise(avg = mean(`Total Volume`)) |> 
+  select(region, avg) |> 
+  slice_max(n=5, order_by =avg)
 ```
 
--   Example 2
+-   Example 2 lab 4 question 4 revision
 
 ```{r r-3-2}
+#Grabbing the top 5 mean volume of avocados sold per metros
+avocado_metro <- avocado_clean |> 
+  right_join(regions_metro, by="region")
 
+avocado_metro_avg <- avocado_metro |> 
+  group_by(region) |> 
+  summarise(avg = mean(`Total Volume`)) |> 
+  select(region, avg) |> 
+  slice_max(n=5, order_by =avg)
 ```
 
 ## Data Visualization & Summarization
 
 **DVS-1: I can create visualizations for a *variety* of variable types (e.g., numeric, character, factor, date)**
 
--   numeric variables
+-   numeric variables lab 2 question 4
 
 ```{r dvs-1-num}
-
+ ggplot(data=surveys, mapping=aes(x = weight, y = hindfoot_length)) + geom_point() +
+   labs(x="weight in grams")
 ```
 
--   numeric variables and categorical variables
+-   numeric variables and categorical variables lab 5 question 3
 
 ```{r dvs-2-num-cat}
-
+surveys <- surveys|> 
+  mutate(species = factor(species), 
+         mean_weight = as.numeric(mean_weight),
+         species=fct_reorder(species, mean_weight, .desc = TRUE))
+ggplot(surveys) +
+  geom_line(aes(x=year,
+                y=mean_weight,
+                col=genus)) +
+  labs(y="", 
+       title = "Time plot of mean weight of genuses", 
+       col="Rodent Genus") 
 ```
 
--   categorical variables
+-   categorical variables lab5 question 9
 
 ```{r dvs-2-cat}
-
+surveys <- surveys |> 
+  mutate(new=fct_collapse(day_of_week,
+         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
+         Weekend = c("Sat", "Sun"))) 
+    
+ggplot(surveys, aes(x=new)) +
+  geom_bar() +
+  labs(y="", title="Count of rodents caught",x="Day of week")
 ```
 
--   dates
+-   dates lab 5 time series
 
 ```{r dvs-2-date}
-
+surveys <- surveys|> 
+  mutate(species = factor(species), 
+         mean_weight = as.numeric(mean_weight),
+         species=fct_reorder(species, 
+                             mean_weight, 
+                             .desc = TRUE))
+ggplot(surveys) +
+  geom_line(aes(x=year,
+                y=mean_weight,
+                col=genus)) +
+  labs(y="", 
+       title = "Time plot of mean weight of genuses", 
+       col="Rodent Genus") 
 ```
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
 
--   Example 1
+-   Example 1 Challenge 4
 
 ```{r dvs-2-1}
+ggplot(clean_avo) +
+  geom_point(aes(x=housing_years, y=housing_values), color = "green") + 
+  facet_grid(~region) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(title="Avg prices of housing vs Years in each CA city") + 
+  ylab("Housing Prices in Dollars") +
+  xlab("Years")
 
 ```
 
--   Example 2
+-   Example 2 lab 5 question 9
 
 ```{r dvs-2-2}
-
+surveys <- surveys |> 
+  mutate(new=fct_collapse(day_of_week,
+         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
+         Weekend = c("Sat", "Sun"))) 
+    
+ggplot(surveys, aes(x=new)) +
+  geom_bar() +
+  labs(y="", title="Count of rodents caught",x="Day of week")
 ```
 
 **DVS-3: I show creativity in my visualizations**
 
--   Example 1
+-   Example 1 Challenge 4
 
 ```{r dvs-3-1}
-
+ggplot(clean_avo) +
+  geom_point(aes(x=housing_years, y=housing_values), color = "green") + 
+  facet_grid(~region) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(title="Avg prices of housing vs Years in each CA city") + 
+  ylab("Housing Prices in Dollars") +
+  xlab("Years")
 ```
 
--   Example 2
+-   Example 2 Challenge 2
 
 ```{r dvs-3-2}
-
+surveys <- read_csv(here( "surveys.csv"))
+ggplot(data=surveys, mapping=aes(x = weight, 
+                                  y = species)) +  
+  geom_jitter(color="tomato", 
+              alpha=.5, 
+              width=.5, 
+              height = .5)+
+  suppressMessages(geom_density_ridges()) +
+  xlab("weight of rodent in grams")+ 
+  ylab("species of rodents")
 ```
 
 **DVS-4: I can calculate numerical summaries of variables.**
 
--   Example 1
+-   Example 1 lab 4 question 5
 
 ```{r dvs-4-1}
-
+avo_prices <- avocado_cali |> 
+  select(region, type, AveragePrice) |> 
+  group_by(region, type) |> 
+  summarise( avg = mean(AveragePrice)) |> 
+  pivot_wider(names_from = region, 
+              values_from = avg) |> 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
 ```
 
--   Example 2
+-   Example 2 lab 4 question 4
 
 ```{r dvs-4-2}
-
+avocado_metro_avg <- avocado_metro |> 
+  group_by(region) |> 
+  summarise(avg = mean(`Total Volume`)) |> 
+  select(region, avg) |> 
+  slice_max(n=5, order_by =avg)
 ```
 
 **DVS-5: I can find summaries of variables across multiple groups.**
 
--   Example 1
+-   Example 1 lab 4 question 5
 
 ```{r dvs-5-1}
+avo_prices <- avocado_cali |> 
+  select(region, type, AveragePrice) |> 
+  group_by(region, type) |> 
+  summarise( avg = mean(AveragePrice)) |> 
+  pivot_wider(names_from = region, 
+              values_from = avg) |> 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
 
 ```
 
--   Example 2
+-   Example 2 lab 4 question 6
 
 ```{r dvs-5-2}
-
+avo_c<-avocado_cali |> 
+  group_by(region, type) |>
+  mutate(mean = across(.cols = `Total Bags`: `XLarge Bags`, .fns=mean),
+  small_proportions = mean$`Small Bags` / mean$`Total Bags`,
+  large_proportions = mean$`Large Bags` / mean$`Total Bags`,
+  xlarge_proportions = mean$`XLarge Bags` / mean$`Total Bags`) |>
+  pivot_longer(cols = `small_proportions`:`xlarge_proportions`, names_to = "Avocado size", values_to = "proportions")
 ```
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
@@ -299,16 +489,31 @@ I've done this in the following provided assignments:
 
 **PE-1: I can write concise code which does not repeat itself.**
 
--   using a single function call
+-   using a single function call lab4 question 6
 
 ```{r pe-1-one-call}
-
+avo_c<-avocado_cali |> 
+  group_by(region, type) |>
+  mutate(mean = across(.cols = `Total Bags`: `XLarge Bags`, .fns=mean),
+  small_proportions = mean$`Small Bags` / mean$`Total Bags`,
+  large_proportions = mean$`Large Bags` / mean$`Total Bags`,
+  xlarge_proportions = mean$`XLarge Bags` / mean$`Total Bags`) |>
+  pivot_longer(cols = `small_proportions`:`xlarge_proportions`, names_to = "Avocado size", values_to = "proportions")
 ```
 
 -   `across()`
 
 ```{r pe-1-across}
+avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
 
+avo_prices <- avocado_cali |> 
+  select(region, type, AveragePrice) |> 
+  group_by(region, type) |> 
+  summarise( avg = mean(AveragePrice)) |> 
+  pivot_wider(names_from = region, 
+              values_from = avg) |> 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
+avo_prices$SanFrancisco
 ```
 
 -   `map()` functions
@@ -333,10 +538,19 @@ I've done this in the following provided assignments:
 
 **PE-3:I can use iteration to reduce repetition in my code.**
 
--   `across()`
+-   `across() lab 4 question 5`
 
 ```{r pe-3-across}
+avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
 
+avo_prices <- avocado_cali |> 
+  select(region, type, AveragePrice) |> 
+  group_by(region, type) |> 
+  summarise( avg = mean(AveragePrice)) |> 
+  pivot_wider(names_from = region, 
+              values_from = avg) |> 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
+avo_prices$SanFrancisco
 ```
 
 -   `map()` functions (Provide 2 Examples)
@@ -351,16 +565,33 @@ I've done this in the following provided assignments:
 
 **PE-4: I can use modern tools when carrying out my analysis.**
 
--   Example 1
+-   Example 1 lab4 question 4
 
 ```{r pe-4-1}
+new_avocado_major <- avocado_major |> 
+  separate(col = Date, 
+           sep = "-", 
+           into = c("Year", "Month", "Day")) 
+new_avocado_major |> 
+  filter(Year==2017, 
+         type== "organic") |> 
+  slice_max(`Total Volume`)
 
 ```
 
--   Example 2
+-   Example 2 lab4 question 4
 
 ```{r pe-4-2}
+new_avocado_major <- avocado_major |> 
+  separate(col = Date, 
+           sep = "-", 
+           into = c("Year", "Month", "Day")) 
+new_avocado_major |> 
+  filter(Year==2017, 
+         type== "organic") |> 
+  slice_max(`Total Volume`)
 
+new_avocado_major |> group_by(Month) |> summarise(vol = sum(`Total Volume`)) |> slice_max(`vol`)
 ```
 
 ## Data Simulation & Modeling
@@ -393,14 +624,47 @@ I've done this in the following provided assignments:
 
 ```
 
+Above are the learning targets, I was able to demonstrate thus far into the
+Spring Quarter. I have indeed demonstrated my commitment to continued learning
+by asking question on discord and continuing to reflect on and improve on my
+mistakes I have made in the class assignments. Like if you look back at my older
+assignments in the class, you can see many mistakes in spacing and tidiness and
+reproducability in my code, but as I learn throughout the quarter, my code has
+become more and more precise and my graphs look neatier. This is through my consistency
+in learning from my past mistakes. In my work group, I have become more and more
+understanding of everyones backgrounds and is patient when explaining to my group
+members concepts they do not understand. With this, my group is ensured to success
+on upcoming practice activties and never fall behind. I would also answer questions
+on discord when presented. I have contributed to creating a respectful classroom 
+learning community by willing to help anyone who asks for my assistence.
+
+I believe I deserve an A- in the class currently because of the following reasons
+below:
+
 ## Revising My Thinking
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
+
+Whenever I recieve an incomplete on an assignment, I would keep revising them
+until I get them completed because I want to learn from my mistakes and grow from them
+. My growth can be seen throught incorporated feedbacks throughout my assignments
 
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
 
+In all of my challenge assignments I ensure that I do them well even if I have to
+do external research like in challenge 4. I would read multiple documentations of function I am not familiar of an would incorporate them in correctly
+
 ## Peer Support & Collaboration
 
 <!-- Include an image of feedback you gave that you are proud of (either in a peer review or in Discord) -->
+
+I act on my role given each week in my group and ensure that they understand what
+is going on in each step of the assignment and I would also answer question on discord
+from time to time. The only reason why I deserve an A- not an A is because I did not complete first the 
+peer review because I was not aware that we had to complete it since I could not 
+find where to do them. But after that first mistake, I have been pretty consistent
+with them.
+
+![](Screenshot%202023-02-14%20at%2010.18.20%20AM.png)

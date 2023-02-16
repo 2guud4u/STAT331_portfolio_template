@@ -1,0 +1,135 @@
+---
+title: "Lab 4"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+execute: 
+  eval: true
+  error: true
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(dplyr)
+
+avo <- read_csv(here("avocado.csv"))
+```
+
+**1.** Briefly describe the dataset. What information does it contain?
+
+The data set contains the average price of avocados per type as they increase each year. The data is from Hass Avocado Board website in May of 2018. The columns it contains are: date, average price, type, year, region, total volume sold, and numbers of different types of PLU's sold.
+
+**2.** Clean the data in any way you see fit.
+
+```{r}
+#2 data sets list of all major regions a other of non major 2 pipe lines
+dis <- avo |> 
+  distinct(region)
+regions_major <- tibble(region = c("West", 
+                                 "GreatLakes", 
+                                 "SouthCentral", 
+                                 "Southeast", 
+                                 "Plains", 
+                                 "Northeast", 
+                                 "Midsouth"))
+
+regions_metro <- tibble(region = c("Chicago", 
+                                   "Houston", 
+                                   "LasVegas", 
+                                   "LosAngeles", 
+                                   "NewYork", 
+                                   "Philadelphia", 
+                                   "Sacramento", 
+                                   "SanDiego", 
+                                   "SanFrancisco"))
+avocado_clean <- anti_join(avo, regions_major, by = "region")
+avocado_major <- left_join(regions_major, avo, by = "region")
+
+
+```
+
+**3.** Which major region sold the most organic, small Hass avocados in 2017?
+
+The Northeast sold the most avocados in 2017
+
+**4.** Use the `separate()` function to split the `Date` variable into year, month, and day. In which month is the highest volume of avocado sales?
+
+February had the most sales
+
+```{r}
+new_avocado_major <- avocado_major |> separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) 
+new_avocado_major |> filter(Year==2017, type== "organic") |> slice_max(`Total Volume`)
+
+new_avocado_major |> group_by(Month) |> summarise(vol = sum(`Total Volume`)) |> slice_max(`vol`)
+```
+
+```{r}
+avocado_metro <- avocado_clean |> 
+  right_join(regions_metro, by="region")
+
+avocado_metro_avg <- avocado_metro |> 
+  group_by(region) |> 
+  summarise(avg = mean(`Total Volume`)) |> 
+  select(region, avg) |> 
+  slice_max(n=5, order_by =avg)
+
+avocado_metro_graph <- left_join(x=avocado_metro_avg, y=avocado_metro) 
+
+
+ggplot(avocado_metro_graph) +
+  geom_boxplot(aes(y=region, x = `Total Volume`,color=region ), ) + labs(y="Cities", title = "Boxplot of Total avocados sold per metro city")
+```
+
+**5.** Which metro area regions sold the most total avocados?
+
+LA sold the most on average
+
+```{r}
+avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
+
+avo_prices <- avocado_cali |> 
+  select(region, type, AveragePrice) |> 
+  group_by(region, type) |> 
+  summarise( avg = mean(AveragePrice)) |> 
+  pivot_wider(names_from = region, 
+              values_from = avg) |> 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
+avo_prices$SanFrancisco
+```
+
+**6.** In which regions is the price of organic versus conventional avocados most different?
+
+The region with the most difference is San Francisco
+
+```{r}
+avo_c<-avocado_cali |> 
+  
+  group_by(region, type) |>
+  mutate(mean = across(.cols = `Total Bags`: `XLarge Bags`, .fns=mean),
+  small_proportions = mean$`Small Bags` / mean$`Total Bags`,
+  large_proportions = mean$`Large Bags` / mean$`Total Bags`,
+  xlarge_proportions = mean$`XLarge Bags` / mean$`Total Bags`) |>
+  pivot_longer(cols = `small_proportions`:`xlarge_proportions`, names_to = "Avocado size", values_to = "proportions")
+
+
+avo_c |> group_by(region) |>
+  ggplot(aes(x=region, y=proportions, fill = `Avocado size`)) +
+  geom_col(position = "fill") +
+  ylab("Proportion of Mean Avocados Sold") +
+  xlab("Region of CA") + facet_wrap(~type) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  scale_fill_manual(values = c("#a6cee3", "#1f78b4", "#b2df8a"))
+
+  
+
+```
+
+ref: https://www.geeksforgeeks.org/how-to-avoid-overlapping-labels-in-ggplot2-in-r/
