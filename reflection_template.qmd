@@ -187,7 +187,7 @@ clean_avo <- avo |>
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
 
--   `semi_join()`
+-   `semi_join()lab 4`
 
 ```{r wd-6-semi}
 avocado_metro <- avocado_clean |> 
@@ -217,7 +217,7 @@ prof_course |>
   full_join(course_info)
 ```
 
--   `pivot_wider() challenge 4`
+-   `pivot_wider() challenge 9`
 
 ```{r wd-7-wide}
 A2_data <- baby_data |>
@@ -236,7 +236,7 @@ A2_data <- baby_data |>
 
 **R-1: I can create professional looking, reproducible analyses using RStudio projects, Quarto documents, and the here package.**
 
-I've done this in the following provided assignments: Lab 4 and Lab 5
+I've done this in the following provided assignments: all in the artifacts
 
 **R-2: I can write well documented and tidy code.**
 
@@ -249,7 +249,8 @@ ggplot(data=surveys, mapping=aes(x = weight,
   geom_jitter(color="tomato", 
               alpha=.3) +
   geom_boxplot(outlier.alpha = 0)+ 
-  labs(y="",x="weight of rodentin grams", 
+  labs(y="",
+       x="weight of rodentin grams", 
        title = "Box plot for different species weights of rodents in grams across speices")
 ```
 
@@ -258,13 +259,16 @@ ggplot(data=surveys, mapping=aes(x = weight,
 ```{r r-2-2}
 #Grabbing the top 5 mean volume of avocados sold per metros
 avocado_metro <- avocado_clean |> 
-  right_join(regions_metro, by="region")
+  right_join(regions_metro, 
+             by="region")
 
 avocado_metro_avg <- avocado_metro |> 
   group_by(region) |> 
   summarise(avg = mean(`Total Volume`)) |> 
-  select(region, avg) |> 
-  slice_max(n=5, order_by =avg)
+  select(region, 
+         avg) |> 
+  slice_max(n=5, 
+            order_by = avg)
 ```
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
@@ -277,18 +281,32 @@ hiphop_new <- hiphop_clean |>
   distinct(subj, .keep_all = TRUE)  
 ```
 
--   Example 2 lab 4 question 4 revision
+-   Example 2 lab 8
 
 ```{r r-3-2}
 #Grabbing the top 5 mean volume of avocados sold per metros
-avocado_metro <- avocado_clean |> 
-  right_join(regions_metro, by="region")
+make_phrase <- function(day, num_word, item, verb, adjective, location) {
+  
+  ## Step 1: Replace NAs with blank strings
+  verb <- str_replace_na(verb, "")
+  adjective <- str_replace_na(adjective, "")
+  location <- str_replace_na(location, "")
+  
+  ## Step 2: If the day is larger than 1, the items need pluralized! 
+  item<-ifelse(day>1, 
+               pluralize_gift(item), 
+               item)
+  ## Step 3: If the day is 1, you need to add an "a" or "an" before the gift 
+  item<-ifelse(day!=1,
+               item, 
+               case_when(
+                 str_detect(item, "^[aeiou]") ~ str_c("an", item, sep=" " ),
+                 TRUE ~ str_c("a", item, sep=" " )
+               ))
+  ## Step 4: Glue all of the pieces together to make a phrase! 
+  return(str_squish(glue("{english(day)} {adjective} {item} {verb} {location}")))
 
-avocado_metro_avg <- avocado_metro |> 
-  group_by(region) |> 
-  summarise(avg = mean(`Total Volume`)) |> 
-  select(region, avg) |> 
-  slice_max(n=5, order_by =avg)
+}
 ```
 
 ## Data Visualization & Summarization
@@ -549,37 +567,46 @@ table3 |>
 
 **PE-1: I can write concise code which does not repeat itself.**
 
--   using a single function call lab4 question 6
+-   using a single function call lab7 question 3
 
 ```{r pe-1-one-call}
-avo_c<-avocado_cali |> 
-  group_by(region, type) |>
-  mutate(mean = across(.cols = `Total Bags`: `XLarge Bags`, .fns=mean),
-  small_proportions = mean$`Small Bags` / mean$`Total Bags`,
-  large_proportions = mean$`Large Bags` / mean$`Total Bags`,
-  xlarge_proportions = mean$`XLarge Bags` / mean$`Total Bags`) |>
-  pivot_longer(cols = `small_proportions`:`xlarge_proportions`, names_to = "Avocado size", values_to = "proportions")
+rescale_01 <- function(x){
+  stopifnot(is.numeric(x), length(x)>1)
+  r <-  range(x, na.rm=TRUE)
+  min <- r[1]
+  max <- r[2]
+  x <- (x-min)/(max-min)
+  return(x)
+    
+}
+x <- c(1:85, NA)
+x <- rescale_01(x)
 ```
 
--   `across()`
+-   `across()`lab7 question 3.5
 
 ```{r pe-1-across}
-avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
-
-avo_prices <- avocado_cali |> 
-  select(region, type, AveragePrice) |> 
-  group_by(region, type) |> 
-  summarise( avg = mean(AveragePrice)) |> 
-  pivot_wider(names_from = region, 
-              values_from = avg) |> 
-  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
-avo_prices$SanFrancisco
+rescale_column <- function(df, col){
+  df <- df |> 
+    mutate(across(.cols= {{col}} , .fns = ~rescale_01(.x)))
+  return(df)
+}
+ fish_data <- fish_data |> 
+  rescale_column(length:weight)
 ```
 
--   `map()` functions
+-   `map()` functions lab 8
 
 ```{r pe-1-map-1}
-
+xmas2 <- xmas |>
+  mutate(Full.Phrase = pmap_chr(.l = list(day=Day, 
+                                          num_word=Day.in.Words, 
+                                          item = Gift.Item, 
+                                          verb=Verb, 
+                                          adjective=Adjective, 
+                                          location=Location), 
+                                .f = make_phrase)
+         )
 ```
 
 **PE-2: I can write functions to reduce repetition in my code.**
@@ -655,7 +682,7 @@ song <- map_chr(.x=1:12,
 
 **PE-4: I can use modern tools when carrying out my analysis.**
 
--   Example 1 lab4 question 4
+-   Example 1 lab4 question 4 slice_max
 
 ```{r pe-4-1}
 new_avocado_major <- avocado_major |> 
@@ -669,29 +696,23 @@ new_avocado_major |>
 
 ```
 
--   Example 2 lab4 question 4
+-   Example 2 lab7 across
 
 ```{r pe-4-2}
-new_avocado_major <- avocado_major |> 
-  separate(col = Date, 
-           sep = "-", 
-           into = c("Year", "Month", "Day")) 
-new_avocado_major |> 
-  filter(Year==2017, 
-         type== "organic") |> 
-  slice_max(`Total Volume`)
-
-new_avocado_major |> 
-  group_by(Month) |> 
-  summarise(vol = sum(`Total Volume`)) |>
-  slice_max(`vol`)
+rescale_column <- function(df, col){
+  df <- df |> 
+    mutate(across(.cols= {{col}} , .fns = ~rescale_01(.x)))
+  return(df)
+}
+ fish_data <- fish_data |> 
+  rescale_column(length:weight)
 ```
 
 ## Data Simulation & Modeling
 
 **DSM-1: I can simulate data from a *variety* of probability models.**
 
--   Example 1
+-   Example 1 practice 9 activity
 
 ```{r dsm-1-1}
 set.seed(1957)
@@ -712,10 +733,12 @@ my_weights <- map_dbl(.x = 1:1000,
 sum(my_weights<4532)
 ```
 
--   Example 2
+-   Example 2 practice 9 activity
 
 ```{r dsm-1-2}
-
+sim <- rnorm(100, mean =4.6, sd=.8)
+sim <- sim < 4
+sum(sim)
 ```
 
 **DSM-2: I can fit a linear regression and extract necessary summary measures.**
@@ -745,7 +768,7 @@ a_lm |>
   geom_point()
 ```
 
-Above are the learning targets, I was able to demonstrate thus far into the Spring Quarter. I have indeed demonstrated my commitment to continued learning by asking question on discord and continuing to reflect on and improve on my mistakes I have made in the class assignments. Like if you look back at my older assignments in the class, you can see many mistakes in spacing and tidiness and reproducability in my code, but as I learn throughout the quarter, my code has become more and more precise and my graphs look neatier. This is through my consistency in learning from my past mistakes. In my work group, I have become more and more understanding of everyones backgrounds and is patient when explaining to my group members concepts they do not understand. With this, my group is ensured to success on upcoming practice activties and never fall behind. I would also answer questions on discord when presented. I have contributed to creating a respectful classroom learning community by willing to help anyone who asks for my assistence.
+3.  Above are the learning targets, I was able to demonstrate thus far into the Winter Quarter. I believe I deserve an A in the class because I showed efficiency in most of the learning targets and developed early understanding with the ones i don't have. I would always incorporate feedback i am given to my assignments as seen in my progression of my labs. I would always implement the revision suggestions given. I have done extensive external research to make my graphs and tables look nicer shown by lab 7 and lab 9. In my work group, I have become more and more understanding of everyones backgrounds and is patient when explaining to my group members concepts they do not understand. With this, my group is ensured to success on upcoming practice activties and never fall behind. I would also answer questions on discord when presented. I have contributed to creating a respectful classroom learning community by willing to help anyone who asks for my assistance. I always complete my peer reviews and use the guidelines.
 
 I believe I deserve an A- in the class currently because of the following reasons below:
 

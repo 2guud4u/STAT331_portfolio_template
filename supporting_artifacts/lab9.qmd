@@ -1,0 +1,106 @@
+---
+title: "Lab 9"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+execute: 
+  eval: true
+  error: false
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(broom)
+baby_data <- read_csv("StateNames_a.csv")
+```
+
+```{r}
+baby_data |>
+  filter(Name == "Allison") |>
+  group_by(Gender, State) |>
+  summarise(Total = sum(Count)) |>
+  pivot_wider(values_from = Total, 
+              values_fill = 0,
+              names_from = Gender)
+
+```
+
+```{r}
+allison_f <- baby_data |>
+  filter(Gender == "F") |>
+  group_by(Year) |>
+  summarise(Total = sum(Count)) 
+
+allison_f |>
+  ggplot(mapping = aes(x=Year, y=Total)) +
+  geom_line()
+```
+
+```{r}
+a_lm<- allison_f |>
+  lm(Total ~ Year, data=_)
+tidy(a_lm)
+
+
+```
+
+Equation: y = -5359999.951 + (2799.631)x
+
+```{r}
+a_lm |>
+  broom::augment() |> 
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
+```
+
+I do not see any patterns
+
+7.  I can conclude that it is on the rise so far from not being cool.
+
+```{r}
+A_data <- baby_data |>
+  filter(Name %in% c("Allan", "Alan", "Allen")) |>
+  group_by(Year) |>
+  summarise(Total = sum(Count)) 
+A_data |>
+  ggplot(mapping = aes(x=Year, y=Total)) +
+  geom_line()
+```
+
+```{r}
+A2_data <- baby_data |>
+  filter(Name %in% c("Allan", "Alan", "Allen"), 
+         Year == 2000, 
+         State %in% c("CA", "PA"),
+         Gender == "M") |>
+  group_by(State, Name) |>
+  summarise(Total = sum(Count)) |>
+  pivot_wider(values_from = Total, 
+              values_fill = 0,
+              names_from = Name) 
+
+A2_Prop_data <- baby_data |>
+    filter(Name %in% c("Allan", "Alan", "Allen"), 
+         Year == 2000, 
+         State %in% c("CA", "PA"),
+         Gender == "M") |>
+  group_by(State, Name) |>
+  summarise(Total = sum(Count)) |>
+  mutate(prop = Total/sum(Total)) |>
+  select(State, Name, prop) |>
+  pivot_wider(values_from = prop, 
+              values_fill = 0,
+              names_from = Name) 
+  
+  
+  
+```
+
+10. In CA, Alan's are 65%, Allan's are 14%, Allen's are 20% of the total "Allen" names. In PA, Alan's are 43%, Allan's are 11%, Allen's are 47% of the total "Allen" names.

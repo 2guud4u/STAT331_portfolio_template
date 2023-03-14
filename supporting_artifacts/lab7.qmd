@@ -1,0 +1,112 @@
+---
+title: "Lab 7"
+author: "Jia Jiang"
+format: 
+  html:
+    self-contained: true
+    code-tools: true
+    code-fold: true
+execute: 
+  eval: true
+  error: false
+  echo: true
+  messages: false
+  warning: false
+editor: visual
+---
+
+```{r message = FALSE}
+library(tidyverse)
+library(here)
+library(ggtext)
+fish_data <- read_csv(here("BlackfootFish.csv"))
+```
+
+What variable(s) have missing values present?
+
+weight
+
+How many observations within each variable have missing values?
+
+weight:1796
+
+```{r}
+missing <- fish_data |>
+  summarise(across(.col = trip:species, 
+                   .fns = ~sum(is.na(.x))))
+```
+
+Create a thoughtful visualization exploring the frequency of missing values across the different years, sections, and trips.
+
+```{r}
+
+drop_data <- fish_data |>
+  drop_na()
+na_data <- fish_data |>
+  anti_join(drop_data)
+
+na_data |>
+  mutate(trip=factor(trip), 
+         year = factor(year)) |>
+  ggplot() +
+  geom_bar(mapping=aes(x=year,fill=trip)) +
+  facet_wrap(~section) +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(title = "Distribution of missing weight data in Years", 
+       subtitle = "between <span style='color:#ff8430'>Trip 1</span> and <span style='color:#246252'>Trip 2</span>",
+       x="Year", 
+       y="Count") +
+  scale_fill_manual(values = c("#ff8430", 
+                                        "#246252"))+
+  theme(plot.subtitle = element_markdown(), 
+        legend.position = "none")
+
+```
+
+Part 3.
+
+```{r}
+
+rescale_01 <- function(x){
+  stopifnot(is.numeric(x), length(x)>1)
+  r <-  range(x, na.rm=TRUE)
+  min <- r[1]
+  max <- r[2]
+  x <- (x-min)/(max-min)
+  return(x)
+    
+}
+x <- c(1:85, NA)
+x <- rescale_01(x)
+
+```
+
+3.4
+
+```{r}
+#| layout-nrow: 2
+
+drop_data <- fish_data |>
+  mutate(rescaled_length = rescale_01(length))
+drop_data |> 
+  mutate(year=factor(year)) |>
+  ggplot() +
+  geom_density(aes(x=length))
+drop_data |> 
+  mutate(year=factor(year)) |>
+  ggplot() +
+  geom_density(aes( x=rescaled_length))
+
+```
+
+3.5 and 3.6
+
+```{r}
+rescale_column <- function(df, col){
+  df <- df |> 
+    mutate(across(.cols= {{col}} , .fns = ~rescale_01(.x)))
+  return(df)
+}
+ fish_data <- fish_data |> 
+  rescale_column(length:weight)
+```
