@@ -25,10 +25,11 @@ execute:
 surveys <- read_csv(here("hiphop.csv"))
 ```
 
--   `xlsx`Practice 3 Question 1
+-   `xlsx`Practice 4 Question 1
 
 ```{r wd-1-xlsx}
-colleges <- read_csv("https://www.dropbox.com/s/bt5hvctdevhbq6j/colleges.csv?dl=1")
+military <- read_xlsx(here::here("data", 
+                                 "gov_spending_per_capita.xlsx"))
 ```
 
 -   `txt`Practice 5.2 Question 1
@@ -43,7 +44,9 @@ message <- read_csv(here::here("data","scrambled_message.txt")
 -   Lab3 Question 2
 
 ```{r wd-2}
-hiphop_new <- hiphop_clean |> select(c(sex, age, ethnic, subj)) |> distinct(subj, .keep_all = TRUE)  
+hiphop_new <- hiphop_clean |> 
+  select(sex, age, ethnic, subj) |> 
+  distinct(subj, .keep_all = TRUE)  
 ```
 
 **WD-3: I can filter rows from a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
@@ -51,22 +54,25 @@ hiphop_new <- hiphop_clean |> select(c(sex, age, ethnic, subj)) |> distinct(subj
 -   numeric lab 4 Question 4
 
 ```{r wd-3-numeric}
-new_avocado_major |> filter(Year==2017, type== "organic") 
+new_avocado_major |> 
+  filter(Year==2017, type== "organic") 
+
 ```
 
--   character -- specifically a string lab 4 Question 5
+-   character -- specifically a string practice 5.2 question 2
 
 ```{r wd-3-string}
-avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco")) 
+message %>% 
+  filter(str_detect(Word, pattern = "\\w")) %>% 
+  count() 
+
 ```
 
--   factor lab5 question 9
+-   factor lab 4 Question 4
 
 ```{r wd-3-factor}
-surveys <- surveys |> 
-  mutate(new=fct_collapse(day_of_week,
-         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
-         Weekend = c("Sat", "Sun"))) 
+new_avocado_major |> 
+  filter(Year==2017, type== "organic") 
 ```
 
 -   date practice 5.1 question 2
@@ -78,10 +84,14 @@ suspects <- suspects |>
 
 **WD-4: I can modify existing variables and create new variables in a dataframe for a *variety* of data types (e.g., numeric, integer, character, factor, date).**
 
--   numeric lab 3 question 12
+-   numeric lab 5 question 1
 
 ```{r wd-4-numeric}
-hiphop_clean |> group_by(word) |> filter(ethnic != "white", sex == "Female") |> summarise(avg = mean(familiarity)) |> slice_max(avg)
+surveys <- surveys|> 
+  drop_na() |>
+  mutate(species = factor(species), 
+         weight = as.numeric(weight),
+         species=fct_reorder(species, weight, .desc = TRUE))
 ```
 
 -   character -- specifically a string practice 5.2 question 1 and 2
@@ -106,7 +116,7 @@ surveys <- surveys|>
 
 nsurveys <- surveys |>
   mutate(day_of_week = factor(day_of_week),
-         day_of_week = ordered(day_of_week, 
+         day_of_week = fct_reorder(day_of_week, 
                                     c("Mon", 
                                       "Tue", 
                                       "Wed", 
@@ -133,41 +143,45 @@ suspects <- suspects |>
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
 
--   `left_join() lab4 question 1`
+-   `left_join() preview 4`
 
 ```{r wd-5-left}
-avocado_major <- left_join(regions_major, avo, by = "region")
+left_join( prof_info,prof_course)
 ```
 
--   `right_join() lab4 question 4`
+-   `right_join() preview 4`
 
 ```{r wd-5-right}
-avocado_metro <- avocado_clean |> 
-  right_join(regions_metro, by="region")
+right_join( prof_course, prof_info)
 ```
 
--   `inner_join()`
+-   `inner_join() preview 4`
 
 ```{r wd-5-inner}
-
+new <- inner_join(prof_info, prof_course)
 ```
 
 -   `full_join() challenge 4`
 
 ```{r wd-5-full}
 clean_avo <- avo |>
-  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
+  separate(col = Date, sep = "-", 
+           into = c("Year", "Month", "Day")) |>
   filter(region %in% c("LosAngeles", 
                        "SanDiego", 
                        "Sacramento",
                        "SanFrancisco") & Year != 2015) |>  
-  group_by(region, Year) |> 
-  select(region, Year, `Total Volume`, AveragePrice) |> 
-  mutate(mean_price = mean(AveragePrice)) |>
-  mutate(mean_volume = mean(`Total Volume`)) |>
-  select(region, Year, mean_price, mean_volume) |>
+  group_by(region, 
+           Year) |> 
+  summarise(mean_volume = mean(`Total Volume`),
+         mean_price = mean(AveragePrice)) |>
+  select(region, 
+         Year, 
+         mean_price, 
+         mean_volume) |>
   distinct() |>
-  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
+  pivot_wider(names_from = Year, 
+              values_from = c(mean_price, mean_volume)) |>
   full_join(housing)
 ```
 
@@ -176,61 +190,53 @@ clean_avo <- avo |>
 -   `semi_join()`
 
 ```{r wd-6-semi}
-
+avocado_metro <- avocado_clean |> 
+  semi_join(regions_metro, 
+             by="region")
 ```
 
 -   `anti_join() lab 4 question 1`
 
 ```{r wd-6-anti}
-avocado_clean <- anti_join(avo, regions_major, by = "region")
+avocado_clean <- anti_join(avo, 
+                           regions_major, 
+                           by = "region")
 ```
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer() challenge 4`
+-   `pivot_longer() preview 4`
 
 ```{r wd-7-long}
-clean_avo <- avo |>
-  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
-  filter(region %in% c("LosAngeles", 
-                       "SanDiego", 
-                       "Sacramento",
-                       "SanFrancisco") & Year != 2015) |>  
-  group_by(region, Year) |> 
-  select(region, Year, `Total Volume`, AveragePrice) |> 
-  mutate(mean_price = mean(AveragePrice)) |>
-  mutate(mean_volume = mean(`Total Volume`)) |>
-  select(region, Year, mean_price, mean_volume) |>
-  distinct() |>
-  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
-  full_join(housing) |>
-  pivot_longer(mean_price_2016:mean_price_2018, names_to = "price_years", values_to = "price_values")
+prof_course |>
+  pivot_longer(cols=c(Stat_331, 
+                      Stat_330, 
+                      Stat_431),
+               names_to= "course",
+               values_to = "can_teach") |>
+  full_join(course_info)
 ```
 
 -   `pivot_wider() challenge 4`
 
 ```{r wd-7-wide}
-clean_avo <- avo |>
-  separate(col = Date, sep = "-", into = c("Year", "Month", "Day")) |>
-  filter(region %in% c("LosAngeles", 
-                       "SanDiego", 
-                       "Sacramento",
-                       "SanFrancisco") & Year != 2015) |>  
-  group_by(region, Year) |> 
-  select(region, Year, `Total Volume`, AveragePrice) |> 
-  mutate(mean_price = mean(AveragePrice)) |>
-  mutate(mean_volume = mean(`Total Volume`)) |>
-  select(region, Year, mean_price, mean_volume) |>
-  distinct() |>
-  pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>
-  full_join(housing)
+A2_data <- baby_data |>
+  filter(Name %in% c("Allan", "Alan", "Allen"), 
+         Year == 2000, 
+         State %in% c("CA", "PA"),
+         Gender == "M") |>
+  group_by(State, Name) |>
+  summarise(Total = sum(Count)) |>
+  pivot_wider(values_from = Total, 
+              values_fill = 0,
+              names_from = Name) 
 ```
 
 ## Reproducibility
 
 **R-1: I can create professional looking, reproducible analyses using RStudio projects, Quarto documents, and the here package.**
 
-I've done this in the following provided assignments:
+I've done this in the following provided assignments: Lab 4 and Lab 5
 
 **R-2: I can write well documented and tidy code.**
 
@@ -263,18 +269,12 @@ avocado_metro_avg <- avocado_metro |>
 
 **R-3: I can write robust programs that are resistant to changes in inputs.**
 
--   Example 1 lab4 question 4 revision
+-   Example 1 lab3 question 1 revision
 
 ```{r r-3-1}
-#Grabbing the top 5 mean volume of avocados sold per metros
-avocado_metro <- avocado_clean |> 
-  right_join(regions_metro, by="region")
-
-avocado_metro_avg <- avocado_metro |> 
-  group_by(region) |> 
-  summarise(avg = mean(`Total Volume`)) |> 
-  select(region, avg) |> 
-  slice_max(n=5, order_by =avg)
+hiphop_new <- hiphop_clean |> 
+  select(sex, age, ethnic, subj) |> 
+  distinct(subj, .keep_all = TRUE)  
 ```
 
 -   Example 2 lab 4 question 4 revision
@@ -318,17 +318,19 @@ ggplot(surveys) +
        col="Rodent Genus") 
 ```
 
--   categorical variables lab5 question 9
+-   categorical variables challenge 2
 
 ```{r dvs-2-cat}
-surveys <- surveys |> 
-  mutate(new=fct_collapse(day_of_week,
-         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
-         Weekend = c("Sat", "Sun"))) 
-    
-ggplot(surveys, aes(x=new)) +
-  geom_bar() +
-  labs(y="", title="Count of rodents caught",x="Day of week")
+surveys <- read_csv(here( "surveys.csv"))
+ggplot(data=surveys, mapping=aes(x = weight, 
+                                  y = species)) +  
+  geom_jitter(color="tomato", 
+              alpha=.5, 
+              width=.5, 
+              height = .5)+
+  suppressMessages(geom_density_ridges()) +
+  xlab("weight of rodent in grams")+ 
+  ylab("species of rodents")
 ```
 
 -   dates lab 5 time series
@@ -364,31 +366,42 @@ ggplot(clean_avo) +
 
 ```
 
--   Example 2 lab 5 question 9
+-   Example 2 lab 2 quesiton 13
 
 ```{r dvs-2-2}
-surveys <- surveys |> 
-  mutate(new=fct_collapse(day_of_week,
-         Weekday = c("Mon", "Tue", "Wed","Thu", "Fri"),
-         Weekend = c("Sat", "Sun"))) 
-    
-ggplot(surveys, aes(x=new)) +
-  geom_bar() +
-  labs(y="", title="Count of rodents caught",x="Day of week")
+ggplot(data=surveys, 
+       mapping=aes(x = weight, 
+                   y = species)) + 
+  geom_jitter(color="tomato", 
+              alpha=.3, 
+              height = .5, 
+              width = .5) +
+  geom_boxplot(outlier.alpha = 0)+ 
+  xlab("weight of rodentin in grams")+ 
+  ylab("species") + 
+  labs(title = "Box plot of weights of rodents in grams across speices")
 ```
 
 **DVS-3: I show creativity in my visualizations**
 
--   Example 1 Challenge 4
+-   Example 1 Lab 7
 
 ```{r dvs-3-1}
-ggplot(clean_avo) +
-  geom_point(aes(x=housing_years, y=housing_values), color = "green") + 
-  facet_grid(~region) +
+na_data |>
+  mutate(trip=factor(trip), 
+         year = factor(year)) |>
+  ggplot() +
+  geom_bar(mapping=aes(x=year,fill=trip)) +
+  facet_wrap(~section) +
   scale_x_discrete(guide = guide_axis(n.dodge=2)) +
-  labs(title="Avg prices of housing vs Years in each CA city") + 
-  ylab("Housing Prices in Dollars") +
-  xlab("Years")
+  labs(title = "Distribution of missing weight data in Years", 
+       subtitle = "between <span style='color:#ff8430'>Trip 1</span> and <span style='color:#246252'>Trip 2</span>",
+       x="Year", 
+       y="Count") +
+  scale_fill_manual(values = c("#ff8430", 
+                                        "#246252"))+
+  theme(plot.subtitle = element_markdown(), 
+        legend.position = "none")
 ```
 
 -   Example 2 Challenge 2
@@ -445,44 +458,91 @@ avo_prices <- avocado_cali |>
 
 ```
 
--   Example 2 lab 4 question 6
+-   Example 2 lab 3 question 11
 
 ```{r dvs-5-2}
-avo_c<-avocado_cali |> 
-  group_by(region, type) |>
-  mutate(mean = across(.cols = `Total Bags`: `XLarge Bags`, .fns=mean),
-  small_proportions = mean$`Small Bags` / mean$`Total Bags`,
-  large_proportions = mean$`Large Bags` / mean$`Total Bags`,
-  xlarge_proportions = mean$`XLarge Bags` / mean$`Total Bags`) |>
-  pivot_longer(cols = `small_proportions`:`xlarge_proportions`, names_to = "Avocado size", values_to = "proportions")
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(age<20) |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_max(avg)
 ```
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
 
--   Example 1
+-   Example 1 challenge 9
 
 ```{r dvs-6-1}
-
+table2 |>
+  gt() |>
+  tab_stubhead("State") |>
+  tab_header(title = "Count of `Alan` Names", 
+             subtitle = "by State")
 ```
 
--   Example 2
+-   Example 2 challenge 9
 
 ```{r dvs-6-2}
-
+table1 |>
+  gt() |>
+  tab_header(title = "Count of `Allisons`", 
+             subtitle = "by State") |>
+  tab_spanner(columns = 2:3, 
+              label = "Gender") |>
+  cols_label(
+    F = "Female",
+    M = "Male"
+  )
 ```
 
 **DVS-7: I show creativity in my tables.**
 
--   Example 1
+-   Example 1 challenge 9
 
 ```{r dvs-7-1}
-
+table3 |>
+  gt() |>
+  cols_label(
+    State = md("**State**"),
+    Alan = md("**Alan**"),
+    Allan = md("**Allan**"),
+    Allen = md("**Allen**")) |>
+  fmt_percent(columns = 2:4, 
+              decimals = 1) |>
+  tab_header(title = "Percentages of `Alan` Names", 
+             subtitle = "by State") |>
+  tab_spanner(columns = 2:4, 
+              label = "Names") |>
+  tab_source_note( source_note=md("From [Dropbox Link](https://www.dropbox.com/sh/czm61yzmvzl6xfb/AABEFdpy02aNRhZ_vcxrVAQSa?dl=0)")) |>
+  data_color(columns = State, 
+             colors = c("red", "blue")) |>
+  tab_style(locations= cells_body(columns = 2:4), 
+            style = list(cell_text(font = "Comic Sansa",
+                                   style = "italic")))
 ```
 
--   Example 2
+-   Example 2 challenge 9
 
 ```{r dvs-7-2}
-
+table3 |>
+  gt() |>
+  cols_label(
+    State = md("**State**"),
+    Alan = md("**Alan**"),
+    Allan = md("**Allan**"),
+    Allen = md("**Allen**")) |>
+  fmt_percent(columns = 2:4, 
+              decimals = 1) |>
+  tab_header(title = "Percentages of `Alan` Names", 
+             subtitle = "by State") |>
+  tab_spanner(columns = 2:4, 
+              label = "Names") |>
+  tab_source_note( source_note=md("From [Dropbox Link](https://www.dropbox.com/sh/czm61yzmvzl6xfb/AABEFdpy02aNRhZ_vcxrVAQSa?dl=0)")) |>
+  data_color(columns = State, 
+             colors = c("red", "blue")) |>
+  tab_style(locations= cells_body(columns = 2:4), 
+            style = list(cell_text(font = "Comic Sansa",
+                                   style = "italic")))
 ```
 
 ## Program Efficiency
@@ -524,16 +584,27 @@ avo_prices$SanFrancisco
 
 **PE-2: I can write functions to reduce repetition in my code.**
 
--   Example 1
+-   Example 1 lab 7 part 3
 
 ```{r pe2-1}
-
+rescale_01 <- function(x){
+  stopifnot(is.numeric(x), length(x)>1)
+  r <-  range(x, na.rm=TRUE)
+  min <- r[1]
+  max <- r[2]
+  x <- (x-min)/(max-min)
+  return(x)
+}
 ```
 
--   Example 2
+-   Example 2 lab 7 3.5
 
 ```{r pe2-2}
-
+rescale_column <- function(df, col){
+  df <- df |> 
+    mutate(across(.cols= {{col}} , .fns = ~rescale_01(.x)))
+  return(df)
+}
 ```
 
 **PE-3:I can use iteration to reduce repetition in my code.**
@@ -544,23 +615,42 @@ avo_prices$SanFrancisco
 avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
 
 avo_prices <- avocado_cali |> 
-  select(region, type, AveragePrice) |> 
-  group_by(region, type) |> 
+  select(region, 
+         type, 
+         AveragePrice) |> 
+  group_by(region, 
+           type) |> 
   summarise( avg = mean(AveragePrice)) |> 
   pivot_wider(names_from = region, 
               values_from = avg) |> 
-  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, .fns=diff)) 
+  summarise(diff = across(.cols= `LosAngeles`:`SanFrancisco`, 
+                          .fns=diff)) 
 avo_prices$SanFrancisco
 ```
 
--   `map()` functions (Provide 2 Examples)
+-   `map()` functions (Provide 2 Examples) practice activity 8
 
 ```{r pe-3-map-1}
-
+xmas2 <- xmas |>
+  mutate(Full.Phrase = pmap_chr(.l = list(day=Day, 
+                                          num_word=Day.in.Words, 
+                                          item = Gift.Item, 
+                                          verb=Verb, 
+                                          adjective=Adjective, 
+                                          location=Location), 
+                                .f = make_phrase)
+         )
 ```
 
-```{r pe-3-map-2}
+lab8
 
+```{r pe-3-map-2}
+song <- map_chr(.x=1:12, 
+        .f = ~sing_day(xmas2, 
+                       .x, 
+                       Full.Phrase)) |>
+  str_c(collapse = ".\n\n") 
+  
 ```
 
 **PE-4: I can use modern tools when carrying out my analysis.**
@@ -591,7 +681,10 @@ new_avocado_major |>
          type== "organic") |> 
   slice_max(`Total Volume`)
 
-new_avocado_major |> group_by(Month) |> summarise(vol = sum(`Total Volume`)) |> slice_max(`vol`)
+new_avocado_major |> 
+  group_by(Month) |> 
+  summarise(vol = sum(`Total Volume`)) |>
+  slice_max(`vol`)
 ```
 
 ## Data Simulation & Modeling
@@ -601,7 +694,22 @@ new_avocado_major |> group_by(Month) |> summarise(vol = sum(`Total Volume`)) |> 
 -   Example 1
 
 ```{r dsm-1-1}
+set.seed(1957)
 
+music_man <- function(n_tromb, n_cor, n_reed){
+  
+  trombones <- rnorm(n_tromb, mean=4.6, sd=.8)
+  cornets <- runif(n_cor,min=1.5,max=3.5)
+  reeds <- rchisq(n_reed,df=4)
+  
+  return(sum(trombones, cornets,reeds))
+  
+}
+
+my_weights <- map_dbl(.x = 1:1000, 
+                      .f = ~ music_man(n_tromb = 76,n_cor= 110, n_reed=542+318+175)
+                      ) 
+sum(my_weights<4532)
 ```
 
 -   Example 2
@@ -612,59 +720,51 @@ new_avocado_major |> group_by(Month) |> summarise(vol = sum(`Total Volume`)) |> 
 
 **DSM-2: I can fit a linear regression and extract necessary summary measures.**
 
--   Example 1
+-   Example 1 practice activity 9
 
 ```{r dsm-2-1}
+data <- read_csv("mystery_animal.csv")
+data<-data |>
+  lm(weight_after ~ weight_before, data=_)
 
+data |>
+  broom::augment() |> 
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
 ```
 
--   Example 2
+-   Example 2 lab 9
 
 ```{r dsm-2-2}
-
+a_lm<- allison_f |>
+  lm(Total ~ Year, data=_)
+tidy(a_lm)
+a_lm |>
+  broom::augment() |> 
+  ggplot(mapping = aes(y = .resid, x = .fitted)) +
+  geom_point()
 ```
 
-Above are the learning targets, I was able to demonstrate thus far into the
-Spring Quarter. I have indeed demonstrated my commitment to continued learning
-by asking question on discord and continuing to reflect on and improve on my
-mistakes I have made in the class assignments. Like if you look back at my older
-assignments in the class, you can see many mistakes in spacing and tidiness and
-reproducability in my code, but as I learn throughout the quarter, my code has
-become more and more precise and my graphs look neatier. This is through my consistency
-in learning from my past mistakes. In my work group, I have become more and more
-understanding of everyones backgrounds and is patient when explaining to my group
-members concepts they do not understand. With this, my group is ensured to success
-on upcoming practice activties and never fall behind. I would also answer questions
-on discord when presented. I have contributed to creating a respectful classroom 
-learning community by willing to help anyone who asks for my assistence.
+Above are the learning targets, I was able to demonstrate thus far into the Spring Quarter. I have indeed demonstrated my commitment to continued learning by asking question on discord and continuing to reflect on and improve on my mistakes I have made in the class assignments. Like if you look back at my older assignments in the class, you can see many mistakes in spacing and tidiness and reproducability in my code, but as I learn throughout the quarter, my code has become more and more precise and my graphs look neatier. This is through my consistency in learning from my past mistakes. In my work group, I have become more and more understanding of everyones backgrounds and is patient when explaining to my group members concepts they do not understand. With this, my group is ensured to success on upcoming practice activties and never fall behind. I would also answer questions on discord when presented. I have contributed to creating a respectful classroom learning community by willing to help anyone who asks for my assistence.
 
-I believe I deserve an A- in the class currently because of the following reasons
-below:
+I believe I deserve an A- in the class currently because of the following reasons below:
 
 ## Revising My Thinking
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
-Whenever I recieve an incomplete on an assignment, I would keep revising them
-until I get them completed because I want to learn from my mistakes and grow from them
-. My growth can be seen throught incorporated feedbacks throughout my assignments
+Whenever I recieve an incomplete on an assignment, I would keep revising them until I get them completed because I want to learn from my mistakes and grow from them . My growth can be seen throught incorporated feedbacks throughout my assignments
 
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
 
-In all of my challenge assignments I ensure that I do them well even if I have to
-do external research like in challenge 4. I would read multiple documentations of function I am not familiar of an would incorporate them in correctly
+In all of my challenge assignments I ensure that I do them well even if I have to do external research like in challenge 4. I would read multiple documentations of function I am not familiar of an would incorporate them in correctly
 
 ## Peer Support & Collaboration
 
 <!-- Include an image of feedback you gave that you are proud of (either in a peer review or in Discord) -->
 
-I act on my role given each week in my group and ensure that they understand what
-is going on in each step of the assignment and I would also answer question on discord
-from time to time. The only reason why I deserve an A- not an A is because I did not complete first the 
-peer review because I was not aware that we had to complete it since I could not 
-find where to do them. But after that first mistake, I have been pretty consistent
-with them.
+I act on my role given each week in my group and ensure that they understand what is going on in each step of the assignment and I would also answer question on discord from time to time. The only reason why I deserve an A- not an A is because I did not complete first the peer review because I was not aware that we had to complete it since I could not find where to do them. But after that first mistake, I have been pretty consistent with them.
 
-![](Screenshot%202023-02-14%20at%2010.18.20%20AM.png)
+![](images/image-963459836.png)

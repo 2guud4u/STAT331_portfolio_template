@@ -43,7 +43,9 @@ ggplot(data=surveys, mapping=aes(x = weight,
 
 ```{r}
 ggplot(data = surveys, 
-       mapping = aes(x=year, y=weight, col = genus))+
+       mapping = aes(x=year,
+                     y=weight, 
+                     col = genus))+
   geom_line() +
   labs(y="", title = "Time plot of mean weight of genuses", col="Rodent Genus")
 ```
@@ -65,7 +67,9 @@ ggplot(surveys) +
 surveys <- surveys|> 
   mutate(species = factor(species), 
          mean_weight = as.numeric(mean_weight),
-         species=fct_reorder(species, mean_weight, .desc = TRUE))
+         species=fct_reorder(species, 
+                             mean_weight, 
+                             .desc = TRUE))
 ggplot(surveys) +
   geom_line(aes(x=year,
                 y=mean_weight,

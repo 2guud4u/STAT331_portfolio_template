@@ -22,10 +22,19 @@ library(here)
 
 surveys <- read_csv(here("hiphop.csv"))
 
-hiphop_clean <- surveys |> mutate(fam = as.factor(familiarity))
-hiphop_clean |> distinct(word)
-hiphop_clean |> mutate(new_ethnic = case_when(ethnic == "white" ~ "white", TRUE ~ "non-white"))
-hiphop_new <- hiphop_clean |> select(c(sex, age, ethnic, subj)) |> distinct(subj, .keep_all = TRUE)  
+hiphop_clean <- surveys |> 
+  mutate(fam = as.factor(familiarity))
+hiphop_clean |> 
+  distinct(word)
+hiphop_clean |> 
+  mutate(new_ethnic = case_when(ethnic == "white" ~ "white", 
+                                TRUE ~ "non-white"))
+hiphop_new <- hiphop_clean |> 
+  select(c(sex, 
+           age, 
+           ethnic, 
+           subj)) |> distinct(subj, 
+                              .keep_all = TRUE)  
 
 ```
 
@@ -53,29 +62,68 @@ hiphop_new <- hiphop_clean |> select(c(sex, age, ethnic, subj)) |> distinct(subj
 11.min: catch the vapors max: off the hook
 
 ```{r}
-hiphop_clean |> group_by(word) |> filter(age<20) |> summarise(avg = mean(familiarity)) |> slice_max(avg)
-hiphop_clean |> group_by(word) |> filter(age<20) |> summarise(avg = mean(familiarity)) |> slice_min(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(age<20) |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_max(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(age<20) |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_min(avg)
 ```
 
 12.max : feel me min: break someone out, dukey rope, plex, rollie
 
 ```{r}
-hiphop_clean |> group_by(word) |> filter(ethnic != "white", sex == "Female") |> summarise(avg = mean(familiarity)) |> slice_max(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(ethnic != "white",
+         sex == "Female") |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_max(avg)
 
-hiphop_clean |> group_by(word) |> filter(ethnic != "white", sex == "Female") |> summarise(avg = mean(familiarity)) |> slice_min(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(ethnic != "white",
+         sex == "Female") |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_min(avg)
 
 ```
 
 13. max: feel me min:beezy, break someone out, catch the vapors, crossroads, dap, domino, face gator, finna, ghostride, good hair
 
 ```{r}
-hiphop_clean |> group_by(word) |> filter(ethnic == "white", age>30, sex=="male") |> summarise(avg = mean(familiarity)) |> slice_max(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(ethnic == "white", 
+         age>30, 
+         sex=="male") |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_max(avg)
 
-hiphop_clean |> group_by(word) |> filter(ethnic == "white", age>30, sex=="male") |> summarise(avg = mean(familiarity)) |> slice_min(avg)
+hiphop_clean |> 
+  group_by(word) |> 
+  filter(ethnic == "white", 
+         age>30, 
+         sex=="male") |> 
+  summarise(avg = mean(familiarity)) |> 
+  slice_min(avg)
 ```
 
 14.Subject 17 because they match all the filters and knows the most in the beiber option
 
 ```{r}
-hiphop_clean  |> distinct(subj, .keep_all = TRUE) |> filter(ethnic == "white" & sex == "Male", city < 60000, city > 10000, age > 17, age < 23 ) |> slice_max(bieber)
+hiphop_clean  |> 
+  distinct(subj, 
+           .keep_all = TRUE) |> 
+  filter(ethnic == "white" ,
+         sex == "Male", 
+         city < 60000, 
+         city > 10000, 
+         age > 17, 
+         age < 23 ) |>
+  slice_max(bieber)
 ```

@@ -31,8 +31,9 @@ clean_avo <- avo |>
                        "SanFrancisco") & Year != 2015) |>  
   group_by(region, Year) |> 
   select(region, Year, `Total Volume`, AveragePrice) |> 
-  mutate(mean_price = mean(AveragePrice)) |>
-  mutate(mean_volume = mean(`Total Volume`)) |>
+  mutate(mean_price = mean(AveragePrice), 
+         mean_volume = mean(`Total Volume`)) |>
+  
   select(region, Year, mean_price, mean_volume) |>
   distinct() |>
   pivot_wider(names_from = Year, values_from = c(mean_price, mean_volume)) |>

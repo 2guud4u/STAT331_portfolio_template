@@ -81,11 +81,16 @@ avocado_metro_avg <- avocado_metro |>
   select(region, avg) |> 
   slice_max(n=5, order_by =avg)
 
-avocado_metro_graph <- left_join(x=avocado_metro_avg, y=avocado_metro) 
+avocado_metro_graph <- left_join(x=avocado_metro_avg, 
+                                 y=avocado_metro) 
 
 
 ggplot(avocado_metro_graph) +
-  geom_boxplot(aes(y=region, x = `Total Volume`,color=region ), ) + labs(y="Cities", title = "Boxplot of Total avocados sold per metro city")
+  geom_boxplot(aes(y=region, 
+                   x = `Total Volume`,
+                   color=region ), ) + 
+  labs(y="Cities", 
+       title = "Boxplot of Total avocados sold per metro city")
 ```
 
 **5.** Which metro area regions sold the most total avocados?
@@ -93,11 +98,18 @@ ggplot(avocado_metro_graph) +
 LA sold the most on average
 
 ```{r}
-avocado_cali <- avocado_clean |> filter(region %in% c("LosAngeles", "SanDiego", "Sacramento","SanFrancisco"))  
+avocado_cali <- avocado_clean |> 
+  filter(region %in% c("LosAngeles", 
+                       "SanDiego", 
+                       "Sacramento",
+                       "SanFrancisco"))  
 
 avo_prices <- avocado_cali |> 
-  select(region, type, AveragePrice) |> 
-  group_by(region, type) |> 
+  select(region, 
+         type, 
+         AveragePrice) |> 
+  group_by(region, 
+           type) |> 
   summarise( avg = mean(AveragePrice)) |> 
   pivot_wider(names_from = region, 
               values_from = avg) |> 
@@ -121,7 +133,9 @@ avo_c<-avocado_cali |>
 
 
 avo_c |> group_by(region) |>
-  ggplot(aes(x=region, y=proportions, fill = `Avocado size`)) +
+  ggplot(aes(x=region, 
+             y=proportions, 
+             fill = `Avocado size`)) +
   geom_col(position = "fill") +
   ylab("Proportion of Mean Avocados Sold") +
   xlab("Region of CA") + facet_wrap(~type) +

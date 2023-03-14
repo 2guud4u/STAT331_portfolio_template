@@ -116,7 +116,10 @@ First, create a scatterplot of the relationship between `weight` (on the x-axis)
 
 ```{r scatterplot}
 # Code for question 4! 
- ggplot(data=surveys, mapping=aes(x = weight, y = hindfoot_length)) + geom_point() +
+ ggplot(data=surveys, 
+        mapping=aes(x = weight, 
+                    y = hindfoot_length)) + 
+   geom_point() +
    labs(x="weight in grams")
 
 ```
@@ -129,7 +132,11 @@ Add transparency (`alpha`) to the points, to make the points more transparent an
 
 ```{r alpha}
 #Code for question 5!
- ggplot(data=surveys, mapping=aes(x = weight, y = hindfoot_length, alpha)) + geom_point(alpha=.5)+
+ ggplot(data=surveys, 
+        mapping=aes(x = weight, 
+                    y = hindfoot_length, 
+                    alpha)) + 
+   geom_point(alpha=.5)+
    labs(x="weight in grams")
 
 ```
@@ -143,7 +150,9 @@ Add some jitter to the points in the scatterplot.\
 
 ```{r jitter}
 # Code for question 6! 
- ggplot(data=surveys, mapping=aes(x = weight, y = hindfoot_length )) + 
+ ggplot(data=surveys, 
+        mapping=aes(x = weight, 
+                    y = hindfoot_length )) + 
   geom_jitter(alpha = .5)+
    labs(x="weight in grams")
 
@@ -178,7 +187,10 @@ Create side-by-side boxplots to visualize the distribution of weight within each
 # Code for question 8 (and 9 and 10 and 11 and 12)! :) 
 ggplot(data=surveys, mapping=aes(x = weight, 
                                   y = species)) + 
-  geom_jitter(color="tomato", mapping = aes(alpha=.3), height = .5, width = .5)+
+  geom_jitter(color="tomato", 
+              mapping = aes(alpha=.3), 
+              height = .5, 
+              width = .5)+
 geom_boxplot(outlier.alpha = 0)+
    labs(x="weight in grams")
 ```
@@ -219,7 +231,10 @@ Using the code you created in question 12, modify the x-axis and y-axis labels t
 # Code for question 13! 
 ggplot(data=surveys, mapping=aes(x = weight, 
                                   y = species)) + 
-  geom_jitter(color="tomato", alpha=.3, height = .5, width = .5) +
+  geom_jitter(color="tomato", 
+              alpha=.3, 
+              height = .5, 
+              width = .5) +
   geom_boxplot(outlier.alpha = 0)+ 
   xlab("weight of rodentin in grams")+ 
   ylab("species") + labs(title = "Box plot of weights of rodents in grams across speices")
@@ -236,7 +251,10 @@ Flip the orientation of your boxplots from question 10. If you created side-by-s
 # Code for question 14!
 ggplot(data=surveys, mapping=aes(y = weight, 
                                   x = species)) +  
-  geom_jitter(color="tomato", mapping = aes(alpha=.3), height = .5, width = .5) +
+  geom_jitter(color="tomato", 
+              mapping = aes(alpha=.3), 
+              height = .5, 
+              width = .5) +
   geom_boxplot(outlier.alpha = 0)+
   ylab("weight of rodent")+ 
   xlab("hindfoot_length of rodent") 

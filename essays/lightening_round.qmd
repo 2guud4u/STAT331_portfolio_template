@@ -3,3 +3,21 @@ title: "Lightening Round Essays"
 format: html
 editor: visual
 ---
+
+If Aiden Kelly doesn't earn an A, then nobody should, because he is very helpful and kind during class and he works very hard.
+
+-   What was the most difficult part of the class for you? List a general topic, a specific problem, a kind of work we did, etc. and explain why.
+
+    I think the most difficult part of the class for me was understanding what factors were because it did not make sense to me why we needed to use it. But I realized that it made manipulations of data in visualizations easier.
+
+-   What was the easiest part of the class for you? Explain why.
+
+    The easiest part of the class for me is using the functions because it is natural to me.
+
+-   What part of the class surprised or interested you the most? Explain why.
+
+    What interested me the most in class was the nested functions in R and how piping works because I only did very low level C stuff so far so like it is very hard to wrap my head around how the functions worked. It is like magic.
+
+-   Give one piece of advice to a student just beginning a quarter of STAT 331 that will help them be successful in learning.
+
+    I would say to be not stress out about an incomplete on an assignment because I mostly got incompletes and out of habit, I would freak out and spent a lot of time in my day fixing them.
