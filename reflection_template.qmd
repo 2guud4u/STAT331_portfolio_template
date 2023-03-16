@@ -542,22 +542,18 @@ table3 |>
 -   Example 2 challenge 9
 
 ```{r dvs-7-2}
-table3 |>
+table1 |>
   gt() |>
-  cols_label(
-    State = md("**State**"),
-    Alan = md("**Alan**"),
-    Allan = md("**Allan**"),
-    Allen = md("**Allen**")) |>
-  fmt_percent(columns = 2:4, 
-              decimals = 1) |>
-  tab_header(title = "Percentages of `Alan` Names", 
+  tab_header(title = "Count of `Allisons`", 
              subtitle = "by State") |>
-  tab_spanner(columns = 2:4, 
-              label = "Names") |>
-  tab_source_note( source_note=md("From [Dropbox Link](https://www.dropbox.com/sh/czm61yzmvzl6xfb/AABEFdpy02aNRhZ_vcxrVAQSa?dl=0)")) |>
+  tab_spanner(columns = 2:3, 
+              label = "Gender") |>
+  cols_label(
+    F = "Female",
+    M = "Male"
+  ) |>
   data_color(columns = State, 
-             colors = c("red", "blue")) |>
+             colors = c("green", "yellow")) |>
   tab_style(locations= cells_body(columns = 2:4), 
             style = list(cell_text(font = "Comic Sansa",
                                    style = "italic")))
