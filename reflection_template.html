@@ -2753,25 +2753,25 @@ vertical-align: -.125em;
 </div>
 <p><strong>WD-5: I can use mutating joins to combine multiple dataframes.</strong></p>
 <ul>
-<li><code>left_join() preview 4</code></li>
+<li><code>left_join() preview 4.3 part b</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>( prof_info,prof_course)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>right_join() preview 4</code></li>
+<li><code>right_join() preview 4.3 part b</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">right_join</span>( prof_course, prof_info)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>inner_join() preview 4</code></li>
+<li><code>inner_join() preview 4.3 part c</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>new <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(prof_info, prof_course)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>full_join() challenge 4</code></li>
+<li><code>full_join() challenge 4 plotting</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>clean_avo <span class="ot">&lt;-</span> avo <span class="sc">|&gt;</span></span>
@@ -2796,7 +2796,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>WD-6: I can use filtering joins to filter rows from a dataframe.</strong></p>
 <ul>
-<li><code>semi_join()lab 4</code></li>
+<li><code>semi_join()lab 4 q 1</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>avocado_metro <span class="ot">&lt;-</span> avocado_clean <span class="sc">|&gt;</span> </span>
@@ -2813,7 +2813,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>WD-7: I can pivot dataframes from long to wide and visa versa</strong></p>
 <ul>
-<li><code>pivot_longer() preview 4</code></li>
+<li><code>pivot_longer() preview 4 part c</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>prof_course <span class="sc">|&gt;</span></span>
@@ -2825,7 +2825,7 @@ vertical-align: -.125em;
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(course_info)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>pivot_wider() challenge 9</code></li>
+<li><code>pivot_wider() challenge 9 q 9</code></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>A2_data <span class="ot">&lt;-</span> baby_data <span class="sc">|&gt;</span></span>
@@ -2886,7 +2886,7 @@ vertical-align: -.125em;
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(subj, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 lab 8</li>
+<li>Example 2 lab 8 making phrase part</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Grabbing the top 5 mean volume of avocados sold per metros</span></span>
@@ -2941,7 +2941,7 @@ vertical-align: -.125em;
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">&quot;Rodent Genus&quot;</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>categorical variables challenge 2</li>
+<li>categorical variables challenge 2 last part where we have to make density ridges</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>surveys <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>( <span class="st">&quot;surveys.csv&quot;</span>))</span>
@@ -2975,7 +2975,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>DVS-2: I use plot modifications to make my visualization clear to the reader.</strong></p>
 <ul>
-<li>Example 1 Challenge 4</li>
+<li>Example 1 Challenge 4 plotting</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(clean_avo) <span class="sc">+</span></span>
@@ -3004,7 +3004,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>DVS-3: I show creativity in my visualizations</strong></p>
 <ul>
-<li>Example 1 Lab 7</li>
+<li>Example 1 Lab 7 part 3</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>na_data <span class="sc">|&gt;</span></span>
@@ -3024,7 +3024,7 @@ vertical-align: -.125em;
 <span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 Challenge 2</li>
+<li>Example 2 Challenge 2 density ridge part</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>surveys <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>( <span class="st">&quot;surveys.csv&quot;</span>))</span>
@@ -3086,7 +3086,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>DVS-6: I can create tables which make my summaries clear to the reader.</strong></p>
 <ul>
-<li>Example 1 challenge 9</li>
+<li>Example 1 challenge 9 alan tabel</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">|&gt;</span></span>
@@ -3096,7 +3096,7 @@ vertical-align: -.125em;
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">&quot;by State&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 challenge 9</li>
+<li>Example 2 challenge 9 alan table</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>table1 <span class="sc">|&gt;</span></span>
@@ -3112,7 +3112,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>DVS-7: I show creativity in my tables.</strong></p>
 <ul>
-<li>Example 1 challenge 9</li>
+<li>Example 1 challenge 9 alan table</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>table3 <span class="sc">|&gt;</span></span>
@@ -3136,7 +3136,7 @@ vertical-align: -.125em;
 <span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">style =</span> <span class="st">&quot;italic&quot;</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 challenge 9</li>
+<li>Example 2 challenge 9 Allison table</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>table1 <span class="sc">|&gt;</span></span>
@@ -3188,7 +3188,7 @@ vertical-align: -.125em;
 <span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rescale_column</span>(length<span class="sc">:</span>weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>map()</code> functions lab 8</li>
+<li><code>map()</code> functions practice 8 part 4</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>xmas2 <span class="ot">&lt;-</span> xmas <span class="sc">|&gt;</span></span>
@@ -3246,7 +3246,7 @@ vertical-align: -.125em;
 <span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>avo_prices<span class="sc">$</span>SanFrancisco</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><code>map()</code> functions (Provide 2 Examples) practice activity 8</li>
+<li><code>map()</code> functions (Provide 2 Examples) practice activity 8 part 4</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>xmas2 <span class="ot">&lt;-</span> xmas <span class="sc">|&gt;</span></span>
@@ -3259,7 +3259,7 @@ vertical-align: -.125em;
 <span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">.f =</span> make_phrase)</span>
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>         )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>lab8</p>
+<p>lab8 part 3</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>song <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="at">.x=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, </span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">.f =</span> <span class="sc">~</span><span class="fu">sing_day</span>(xmas2, </span>
@@ -3298,7 +3298,7 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="data-simulation-modeling">Data Simulation &amp; Modeling</h2>
 <p><strong>DSM-1: I can simulate data from a <em>variety</em> of probability models.</strong></p>
 <ul>
-<li>Example 1 practice 9 activity</li>
+<li>Example 1 practice 9 activity music part</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1957</span>)</span>
@@ -3319,7 +3319,7 @@ vertical-align: -.125em;
 <span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(my_weights<span class="sc">&lt;</span><span class="dv">4532</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 practice 9 activity</li>
+<li>Example 2 practice 9 activity music part</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="at">mean =</span><span class="fl">4.6</span>, <span class="at">sd=</span>.<span class="dv">8</span>)</span>
@@ -3328,7 +3328,7 @@ vertical-align: -.125em;
 </div>
 <p><strong>DSM-2: I can fit a linear regression and extract necessary summary measures.</strong></p>
 <ul>
-<li>Example 1 practice activity 9</li>
+<li>Example 1 practice activity 9 animal</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;mystery_animal.csv&quot;</span>)</span>
@@ -3341,7 +3341,7 @@ vertical-align: -.125em;
 <span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>Example 2 lab 9</li>
+<li>Example 2 lab 9 part 3</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>a_lm<span class="ot">&lt;-</span> allison_f <span class="sc">|&gt;</span></span>

@@ -143,25 +143,25 @@ suspects <- suspects |>
 
 **WD-5: I can use mutating joins to combine multiple dataframes.**
 
--   `left_join() preview 4`
+-   `left_join() preview 4.3 part b`
 
 ```{r wd-5-left}
 left_join( prof_info,prof_course)
 ```
 
--   `right_join() preview 4`
+-   `right_join() preview 4.3 part b`
 
 ```{r wd-5-right}
 right_join( prof_course, prof_info)
 ```
 
--   `inner_join() preview 4`
+-   `inner_join() preview 4.3 part c`
 
 ```{r wd-5-inner}
 new <- inner_join(prof_info, prof_course)
 ```
 
--   `full_join() challenge 4`
+-   `full_join() challenge 4 plotting`
 
 ```{r wd-5-full}
 clean_avo <- avo |>
@@ -187,7 +187,7 @@ clean_avo <- avo |>
 
 **WD-6: I can use filtering joins to filter rows from a dataframe.**
 
--   `semi_join()lab 4`
+-   `semi_join()lab 4 q 1`
 
 ```{r wd-6-semi}
 avocado_metro <- avocado_clean |> 
@@ -205,7 +205,7 @@ avocado_clean <- anti_join(avo,
 
 **WD-7: I can pivot dataframes from long to wide and visa versa**
 
--   `pivot_longer() preview 4`
+-   `pivot_longer() preview 4 part c`
 
 ```{r wd-7-long}
 prof_course |>
@@ -217,7 +217,7 @@ prof_course |>
   full_join(course_info)
 ```
 
--   `pivot_wider() challenge 9`
+-   `pivot_wider() challenge 9 q 9`
 
 ```{r wd-7-wide}
 A2_data <- baby_data |>
@@ -281,7 +281,7 @@ hiphop_new <- hiphop_clean |>
   distinct(subj, .keep_all = TRUE)  
 ```
 
--   Example 2 lab 8
+-   Example 2 lab 8 making phrase part
 
 ```{r r-3-2}
 #Grabbing the top 5 mean volume of avocados sold per metros
@@ -336,7 +336,7 @@ ggplot(surveys) +
        col="Rodent Genus") 
 ```
 
--   categorical variables challenge 2
+-   categorical variables challenge 2 last part where we have to make density ridges
 
 ```{r dvs-2-cat}
 surveys <- read_csv(here( "surveys.csv"))
@@ -371,7 +371,7 @@ ggplot(surveys) +
 
 **DVS-2: I use plot modifications to make my visualization clear to the reader.**
 
--   Example 1 Challenge 4
+-   Example 1 Challenge 4 plotting
 
 ```{r dvs-2-1}
 ggplot(clean_avo) +
@@ -402,7 +402,7 @@ ggplot(data=surveys,
 
 **DVS-3: I show creativity in my visualizations**
 
--   Example 1 Lab 7
+-   Example 1 Lab 7 part 3
 
 ```{r dvs-3-1}
 na_data |>
@@ -422,7 +422,7 @@ na_data |>
         legend.position = "none")
 ```
 
--   Example 2 Challenge 2
+-   Example 2 Challenge 2 density ridge part
 
 ```{r dvs-3-2}
 surveys <- read_csv(here( "surveys.csv"))
@@ -488,7 +488,7 @@ hiphop_clean |>
 
 **DVS-6: I can create tables which make my summaries clear to the reader.**
 
--   Example 1 challenge 9
+-   Example 1 challenge 9 alan tabel
 
 ```{r dvs-6-1}
 table2 |>
@@ -498,7 +498,7 @@ table2 |>
              subtitle = "by State")
 ```
 
--   Example 2 challenge 9
+-   Example 2 challenge 9 alan table
 
 ```{r dvs-6-2}
 table1 |>
@@ -515,7 +515,7 @@ table1 |>
 
 **DVS-7: I show creativity in my tables.**
 
--   Example 1 challenge 9
+-   Example 1 challenge 9 alan table
 
 ```{r dvs-7-1}
 table3 |>
@@ -539,7 +539,7 @@ table3 |>
                                    style = "italic")))
 ```
 
--   Example 2 challenge 9
+-   Example 2 challenge 9 Allison table
 
 ```{r dvs-7-2}
 table1 |>
@@ -591,7 +591,7 @@ rescale_column <- function(df, col){
   rescale_column(length:weight)
 ```
 
--   `map()` functions lab 8
+-   `map()` functions practice 8 part 4
 
 ```{r pe-1-map-1}
 xmas2 <- xmas |>
@@ -651,7 +651,7 @@ avo_prices <- avocado_cali |>
 avo_prices$SanFrancisco
 ```
 
--   `map()` functions (Provide 2 Examples) practice activity 8
+-   `map()` functions (Provide 2 Examples) practice activity 8 part 4
 
 ```{r pe-3-map-1}
 xmas2 <- xmas |>
@@ -665,7 +665,7 @@ xmas2 <- xmas |>
          )
 ```
 
-lab8
+lab8 part 3
 
 ```{r pe-3-map-2}
 song <- map_chr(.x=1:12, 
@@ -708,7 +708,7 @@ rescale_column <- function(df, col){
 
 **DSM-1: I can simulate data from a *variety* of probability models.**
 
--   Example 1 practice 9 activity
+-   Example 1 practice 9 activity music part
 
 ```{r dsm-1-1}
 set.seed(1957)
@@ -729,7 +729,7 @@ my_weights <- map_dbl(.x = 1:1000,
 sum(my_weights<4532)
 ```
 
--   Example 2 practice 9 activity
+-   Example 2 practice 9 activity music part
 
 ```{r dsm-1-2}
 sim <- rnorm(100, mean =4.6, sd=.8)
@@ -739,7 +739,7 @@ sum(sim)
 
 **DSM-2: I can fit a linear regression and extract necessary summary measures.**
 
--   Example 1 practice activity 9
+-   Example 1 practice activity 9 animal
 
 ```{r dsm-2-1}
 data <- read_csv("mystery_animal.csv")
@@ -752,7 +752,7 @@ data |>
   geom_point()
 ```
 
--   Example 2 lab 9
+-   Example 2 lab 9 part 3
 
 ```{r dsm-2-2}
 a_lm<- allison_f |>
