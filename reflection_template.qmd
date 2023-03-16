@@ -692,7 +692,7 @@ new_avocado_major |>
 
 ```
 
--   Example 2 lab7 across
+-   Example 2 lab7 new across
 
 ```{r pe-4-2}
 rescale_column <- function(df, col){
