@@ -323,7 +323,10 @@ make_phrase <- function(day, num_word, item, verb, adjective, location) {
 -   numeric variables lab 2 question 4
 
 ```{r dvs-1-num}
- ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) + geom_point() +
+ ggplot(data = surveys, 
+        mapping = aes(x = weight, 
+                      y = hindfoot_length)) +
+   geom_point() +
    labs(x = "weight in grams")
 ```
 
@@ -333,7 +336,9 @@ make_phrase <- function(day, num_word, item, verb, adjective, location) {
 surveys <- surveys|> 
   mutate(species = factor(species), 
          mean_weight = as.numeric(mean_weight),
-         species = fct_reorder(species, mean_weight, .desc = TRUE))
+         species = fct_reorder(species, 
+                               mean_weight, 
+                               .desc = TRUE))
 ggplot(surveys) +
   geom_line(aes(x = year,
                 y = mean_weight,
@@ -781,13 +786,13 @@ I believe I deserve an A- in the class currently because of the following reason
 
 <!-- How did you revise your thinking throughout the course? How did you revise your thinking on the code examples you have provided in your portfolio? -->
 
-Whenever I recieve an incomplete on an assignment, I would keep revising them until I get them completed because I want to learn from my mistakes and grow from them . My growth can be seen throught incorporated feedbacks throughout my assignments
+Whenever I receive an incomplete on an assignment, I would keep revising them until I get them completed because I want to learn from my mistakes and grow from them . My growth can be seen through incorporated feedback throughout my assignments.
 
 ## Extending My Thinking
 
 <!-- How did you extended your thinking throughout the course? How did you extend your thinking on the code examples you have provided in your portfolio? -->
 
-In all of my challenge assignments I ensure that I do them well even if I have to do external research like in challenge 4. I would read multiple documentations of function I am not familiar of an would incorporate them in correctly
+In all of my challenge assignments I ensure that I do them well even if I have to do external research like in challenge 4. I would read multiple documentations of function I am not familiar of an would incorporate them in correctly.
 
 ## Peer Support & Collaboration
 
